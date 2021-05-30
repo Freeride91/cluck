@@ -1,24 +1,75 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { AudioContext } from "standardized-audio-context";
+import worker from "./worker.js";
+import WebWorker from "./workerSetup";
+import Clucker from "./components/Clucker";
+import styled from "styled-components";
+
+
+const audioCtx = new AudioContext();
+let LOOKAHEAD = 25.0; // How frequently to call scheduling function (in milliseconds)
 
 function App() {
+  const WorkerRef = React.useRef();
+  const [isLoading, setIsLoading] = useState(true);
+  const [mTicks, setMTicksick] = useState(null);
+
+  const fetchAudioBufferByUrl = async (url) => {
+    const data = await fetch(url, { mode: "no-cors" });
+    const arrayBuffer = await data.arrayBuffer();
+    const decodedAudio = await audioCtx.decodeAudioData(arrayBuffer);
+    return decodedAudio;
+  };
+
+  useEffect(() => {
+    WorkerRef.current = new WebWorker(worker);
+    WorkerRef.current.postMessage({ interval: LOOKAHEAD });
+
+    let ticks = null;
+    async function fetchData() {
+      let ch1 = await fetchAudioBufferByUrl("./cluck_hi1.mp3");
+      let ch2 = await fetchAudioBufferByUrl("./cluck_hi2.mp3");
+      let c2 = await fetchAudioBufferByUrl("./cluck2.mp3");
+      let c3 = await fetchAudioBufferByUrl("./cluck2.mp3");
+      let c4 = await fetchAudioBufferByUrl("./cluck4.mp3");
+      let tick = await fetchAudioBufferByUrl("./tick_sweet.mp3");
+
+      ticks = {
+        ch1,
+        ch2, 
+        c2,
+        c3,
+        c4,
+        tick
+      }
+    }
+    fetchData().then(() => {
+      setMTicksick(ticks);
+      setIsLoading(false);
+    });
+  }, []);
+
+  const schedulePlaySound = (buffer, time, gainVal = 0.6) => {
+    let source = audioCtx.createBufferSource();
+
+    let gainNode = audioCtx.createGain();
+    gainNode.gain.value = gainVal;
+
+    source.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    source.buffer = buffer;
+    source.start(time);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {isLoading ? (
+        <h1>loading...</h1>
+      ) : (
+        <Clucker workerRef={WorkerRef} audioCtx={audioCtx} mTicks={mTicks} schedulePlaySound={schedulePlaySound} />
+      )}
+    </>
   );
 }
 
