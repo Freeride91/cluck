@@ -5,7 +5,6 @@ import WebWorker from "./workerSetup";
 import Clucker from "./components/Clucker";
 import styled from "styled-components";
 
-
 const audioCtx = new AudioContext();
 let LOOKAHEAD = 25.0; // How frequently to call scheduling function (in milliseconds)
 
@@ -36,12 +35,12 @@ function App() {
 
       ticks = {
         ch1,
-        ch2, 
+        ch2,
         c2,
         c3,
         c4,
-        tick
-      }
+        tick,
+      };
     }
     fetchData().then(() => {
       setMTicksick(ticks);
@@ -65,7 +64,9 @@ function App() {
   return (
     <>
       {isLoading ? (
-        <h1>loading...</h1>
+        <Loading>
+          <h1>loading...</h1>
+        </Loading>
       ) : (
         <Clucker workerRef={WorkerRef} audioCtx={audioCtx} mTicks={mTicks} schedulePlaySound={schedulePlaySound} />
       )}
@@ -74,3 +75,10 @@ function App() {
 }
 
 export default App;
+
+const Loading = styled.div`
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

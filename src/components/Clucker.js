@@ -25,6 +25,7 @@ export class Clucker extends Component {
     this.requestAnimationFrameRef = React.createRef();
 
     this.state = {
+      firstStart: false,
       isPlaying: false,
       tempo: 130,
       division: 4,
@@ -100,7 +101,6 @@ export class Clucker extends Component {
       if (metronomeCounter % 2 === 0) {
         this.setState({ counter: metronomeCounter / 2 });
         console.log("set");
-
       }
       metronomeCounter++;
 
@@ -116,6 +116,10 @@ export class Clucker extends Component {
   playStartTheWorker = () => {
     if (!unlocked) {
       this.unlockAudioBuffer();
+    }
+    metronomeCounter = 0;
+    if (!this.state.firstStart) {
+      this.setState({ firstStart: true });
     }
 
     if (!this.state.isPlaying) {
@@ -133,7 +137,7 @@ export class Clucker extends Component {
 
   render() {
     return (
-      <MainContainer>
+      <MainContainer className="noselect">
         <ContentWrap>
           <RoosterContainer>
             <Rooster height={"100%"} />
@@ -149,7 +153,7 @@ export class Clucker extends Component {
           <h1>Cluck-tronome</h1>
           <h2>by András Polyák</h2>
           <br />
-          {/* <White> */}
+
           <TempoBpmWrapper>
             {this.state.tempo}
             <span className="bpm">BPM</span>
@@ -185,6 +189,8 @@ export class Clucker extends Component {
             </BeatButton> */}
           </BeatsWrapper>
 
+          <Unmute started={this.state.firstStart && "started"}>Unmute your device!</Unmute>
+
           {!this.state.isPlaying ? (
             <FaRoundButton onClick={() => this.playStartTheWorker()}>
               <div className="cluckhere">Cluck Here</div> <FontAwesomeIcon className="bgwhite" icon={faPlayCircle} />
@@ -199,18 +205,19 @@ export class Clucker extends Component {
             <a href="https://www.buymeacoffee.com/andrew91" target="_blank" rel="noopener noreferrer">
               <Bmc height={32} />
             </a>
+            🐔
           </BmcWrapper>
         </ContentWrap>
         <Footer>
           <FooterContainer>
             <FooterElement>
-              beéneklős app -&nbsp;
+              vocal warmup app -&nbsp;
               <StyledLink href="https://vocalroutine.com" target="_blank">
                 vocalroutine.com
               </StyledLink>
             </FooterElement>
             <FooterElement>
-              webfejlesztés - gitároktatás -&nbsp;
+              webfejlesztés / gitároktatás -&nbsp;
               <StyledLink href="http://polyakandras.hu" target="_blank">
                 polyakandras.hu
               </StyledLink>
@@ -225,9 +232,20 @@ export class Clucker extends Component {
 export default Clucker;
 
 const BmcWrapper = styled.div`
-  padding: 10px;
-  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 30px;
+
+  padding: 0;
+  margin-top: 30px;
   text-align: center;
+
+  a {
+    text-decoration: none;
+    padding: 0 8px;
+  }
 
   @media (max-width: 580px) {
     margin-top: 30px;
@@ -261,6 +279,23 @@ const MainContainer = styled.div`
   }
 `;
 
+const ContentWrap = styled.div`
+  padding-bottom: 2.5rem; /* Footer height */
+  padding-top: 30px;
+
+  @media (max-width: 768px) {
+    padding-top: 10px;
+    padding-bottom: 3.8rem; /* Footer height */
+  }
+
+  max-width: 90%;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
 const RoosterContainer = styled.div`
   position: relative;
   height: 200px;
@@ -276,8 +311,8 @@ const RoosterContainer = styled.div`
 
   .cluck1 {
     position: absolute;
-    top: 18px;
-    right: 0;
+    top: 30px;
+    right: 20px;
     font-family: "Kalam", cursive;
     font-size: 22px;
     font-weight: 400;
@@ -285,7 +320,7 @@ const RoosterContainer = styled.div`
   .cluck2 {
     position: absolute;
     top: 28px;
-    right: 16px;
+    right: 36px;
     font-family: "Kalam", cursive;
     font-size: 22px;
     font-weight: 400;
@@ -293,7 +328,7 @@ const RoosterContainer = styled.div`
   .cluck3 {
     position: absolute;
     top: 24px;
-    right: 0;
+    right: 25px;
     font-family: "Kalam", cursive;
     font-size: 22px;
     font-weight: 400;
@@ -301,209 +336,33 @@ const RoosterContainer = styled.div`
   .cluck4 {
     position: absolute;
     top: 40px;
-    right: 20px;
+    right: 30px;
     font-family: "Kalam", cursive;
     font-size: 22px;
     font-weight: 400;
   }
 `;
 
-const ContentWrap = styled.div`
-  padding-bottom: 2.5rem; /* Footer height */
-  padding-top: 30px;
-
-  @media (max-width: 580px) {
-    padding-top: 10px;
-    padding-bottom: 3.8rem; /* Footer height */
-  }
-
-  max-width: 90%;
-  margin: 0 auto;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const Footer = styled.footer`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 2.5rem;
-  @media (max-width: 580px) {
-    height: 3.8rem;
-  }
-  background: white;
-
+const Unmute = styled.div`
+  color: #333;
+  text-align: center;
   font-family: "Montserrat", sans-serif;
+  font-size: 18px;
   font-weight: 400;
-  color: #777;
-`;
+  height: 25px;
+  opacity: 0;
 
-const FooterContainer = styled.div`
-  margin: 0 auto;
-  padding-right: 20px;
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-
-  width: 100%;
+  ${(props) => (props.started === "started" && 'animation: fadeOut 3s 0.5s both')};
 
   @media (max-width: 580px) {
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    font-size: 15px;
+    height: 20px;
+    font-size: 16px;
   }
-  @media (max-width: 400px) {
-    font-size: 14px;
-  }
-  @media (max-width: 350px) {
-    font-size: 12px;
-  }
+
 `;
-
-const FooterElement = styled.span`
-  display: inline-block;
-
-  margin-right: 20px;
-
-  @media (max-width: 580px) {
-    margin: 0;
-    padding: 2px 0;
-  }
-
-  :last-of-type {
-    margin-right: 0;
-  }
-`;
-
-const StyledLink = styled.a`
-  color: #005288;
-  text-decoration: underline;
-  font-weight: bold;
-`;
-
-const SliderWrapper = styled.div`
-  margin: 4px auto 0;
-  width: 100%;
-  max-width: 600px;
-`;
-
-const PrettoSlider = withStyles({
-  root: {
-    color: "#003a60",
-    height: 0,
-    // padding: "4px 4px",
-    marginBottom: "4px",
-  },
-  thumb: {
-    height: 22,
-    width: 22,
-    backgroundColor: "#fff",
-    border: "2px solid currentColor",
-    marginTop: -6,
-    marginLeft: -12,
-    "&:focus, &:hover, &$active": {
-      boxShadow: "inherit",
-    },
-  },
-  active: {},
-  valueLabel: {
-    left: "calc(-50% + 4px)",
-  },
-  track: {
-    height: 10,
-    borderRadius: 4,
-  },
-  rail: {
-    height: 10,
-    borderRadius: 4,
-  },
-})(Slider);
-
-const FaRoundButton = styled.button`
-  background: #a6c2da;
-  color: #f45d5d;
-
-  font-size: 50px;
-
-  width: 100%;
-  max-width: 600px;
-
-  margin: 32px auto 0;
-
-  @media (max-width: 580px) {
-    font-size: 40px;
-  }
-
-  padding: 5px;
-  padding-right: 0;
-
-  border: none;
-  border-radius: 16px;
-
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  :hover {
-    background: #0071bc;
-    color: #f73636;
-  }
-
-  .bgwhite {
-    border-radius: 50%;
-    background: white;
-    padding: 2px;
-  }
-
-  .cluckhere {
-    font-family: "Sigmar One", cursive;
-    margin-right: 16px;
-    font-size: 40px;
-    color: #fff;
-
-    @media (max-width: 580px) {
-      font-size: 30px;
-    }
-  }
-`;
-
-// const RoundButton = styled.button`
-//   height: 70px;
-//   width: 70px;
-
-//   padding: 20px;
-//   .play {
-//     padding-left: 6px;
-//   }
-//   .stop {
-//     padding-left: 3px;
-//   }
-//   margin: 4px auto;
-
-//   background-color: #f45d5d;
-//   color: white;
-//   font-size: 32px;
-//   font-weight: bold;
-//   text-transform: uppercase;
-
-//   border: none;
-//   text-decoration: none;
-//   border-radius: 50%;
-
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// `;
 
 const TempoBpmWrapper = styled.div`
-  margin: 22px 0 0 0;
+  margin: 20px 0 -4px 0;
 
   @media (max-width: 580px) {
     margin-top: 8px;
@@ -550,4 +409,153 @@ const BeatButton = styled.button`
 
   background: ${(props) => (props.isActive ? "#d1e1f3" : "#fff")};
   font-weight: ${(props) => props.isActive && 600};
+`;
+
+const SliderWrapper = styled.div`
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+`;
+
+const PrettoSlider = withStyles({
+  root: {
+    color: "#003a60",
+    height: 0,
+    // padding: "4px 4px",
+    marginBottom: "4px",
+  },
+  thumb: {
+    height: 22,
+    width: 22,
+    backgroundColor: "#fff",
+    border: "2px solid currentColor",
+    marginTop: -6,
+    marginLeft: -12,
+    "&:focus, &:hover, &$active": {
+      boxShadow: "inherit",
+    },
+  },
+  active: {},
+  valueLabel: {
+    left: "calc(-50% + 4px)",
+  },
+  track: {
+    height: 10,
+    borderRadius: 4,
+  },
+  rail: {
+    height: 10,
+    borderRadius: 4,
+  },
+})(Slider);
+
+const FaRoundButton = styled.button`
+  background: #a6c2da;
+  color: #f45d5d;
+
+  font-size: 50px;
+
+  width: 100%;
+  max-width: 600px;
+
+  margin: 4px auto 0;
+
+  @media (max-width: 580px) {
+    font-size: 40px;
+  }
+
+  padding: 5px;
+  padding-right: 0;
+
+  border: none;
+  border-radius: 16px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  :hover {
+    background: #0071bc;
+    color: #f73636;
+  }
+
+  .bgwhite {
+    border-radius: 50%;
+    background: white;
+    padding: 2px;
+  }
+
+  .cluckhere {
+    font-family: "Sigmar One", cursive;
+    margin-right: 16px;
+    font-size: 40px;
+    color: #fff;
+
+    @media (max-width: 580px) {
+      font-size: 30px;
+    }
+  }
+`;
+
+const Footer = styled.footer`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;
+  @media (max-width: 768px) {
+    height: 3.8rem;
+  }
+  background: white;
+
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  color: #777;
+`;
+
+const FooterContainer = styled.div`
+  margin: 0 auto;
+  padding-right: 20px;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 15px;
+  }
+  @media (max-width: 400px) {
+    font-size: 14px;
+  }
+  @media (max-width: 350px) {
+    font-size: 12px;
+  }
+`;
+
+const FooterElement = styled.span`
+  display: inline-block;
+
+  margin-right: 20px;
+
+  @media (max-width: 768px) {
+    margin: 0;
+    padding: 2px 0;
+  }
+
+  :last-of-type {
+    margin-right: 0;
+  }
+`;
+
+const StyledLink = styled.a`
+  color: #005288;
+  text-decoration: underline;
+  font-weight: bold;
 `;
