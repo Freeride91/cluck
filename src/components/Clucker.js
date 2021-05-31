@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { ReactComponent as Rooster } from "../assets/rooster.svg";
-import { ReactComponent as Play } from "../assets/play.svg";
-import { ReactComponent as Pause } from "../assets/pause.svg";
+import { ReactComponent as Bmc } from "../assets/bmc.svg";
 import styled from "styled-components";
 import { withStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
+import { faPlayCircle, faStopCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 //-----------------------------------------------------------------------------
 // WebAudio Stuff
@@ -27,6 +28,7 @@ export class Clucker extends Component {
       isPlaying: false,
       tempo: 130,
       division: 4,
+      counter: 0,
     };
   }
 
@@ -95,6 +97,11 @@ export class Clucker extends Component {
       if (metronomeCounter === 4) schedulePlaySound(mTicks.c3, nextNoteTIME, 0.8);
       if (metronomeCounter === 6) schedulePlaySound(mTicks.c4, nextNoteTIME, 0.8);
 
+      if (metronomeCounter % 2 === 0) {
+        this.setState({ counter: metronomeCounter / 2 });
+        console.log("set");
+
+      }
       metronomeCounter++;
 
       if (division === 3 && metronomeCounter % 6 === 0) metronomeCounter = 0;
@@ -128,7 +135,17 @@ export class Clucker extends Component {
     return (
       <MainContainer>
         <ContentWrap>
-          <Rooster height={200} />
+          <RoosterContainer>
+            <Rooster height={"100%"} />
+            {this.state.isPlaying && (
+              <>
+                {this.state.counter === 0 && <div className="cluck1">Cluck!</div>}
+                {this.state.counter === 1 && <div className="cluck2">Cluck!</div>}
+                {this.state.counter === 2 && <div className="cluck3">Cluck!</div>}
+                {this.state.counter === 3 && <div className="cluck4">Cluck!</div>}
+              </>
+            )}
+          </RoosterContainer>
           <h1>Cluck-tronome</h1>
           <h2>by András Polyák</h2>
           <br />
@@ -163,32 +180,42 @@ export class Clucker extends Component {
             <BeatButton isActive={this.state.division === 4} onClick={() => this.setState({ division: 4 })}>
               4/4
             </BeatButton>
-            <BeatButton isActive={this.state.division === -1} onClick={() => this.setState({ division: -1 })}>
+            {/* <BeatButton isActive={this.state.division === -1} onClick={() => this.setState({ division: -1 })}>
               UnCluck
-            </BeatButton>
+            </BeatButton> */}
           </BeatsWrapper>
-          <br />
-          <br />
+
           {!this.state.isPlaying ? (
-            <RoundButton onClick={() => this.playStartTheWorker()}>
-              <SvgWrapper>
-                <Play height={40} fill={"#fff"} />
-              </SvgWrapper>
-            </RoundButton>
+            <FaRoundButton onClick={() => this.playStartTheWorker()}>
+              <div className="cluckhere">Cluck Here</div> <FontAwesomeIcon className="bgwhite" icon={faPlayCircle} />
+            </FaRoundButton>
           ) : (
-            <RoundButton onClick={() => this.stopPlaying()}>
-              <Pause height={40} fill={"#fff"} />
-            </RoundButton>
+            <FaRoundButton onClick={() => this.stopPlaying()}>
+              <div className="cluckhere">Un-Cluck</div> <FontAwesomeIcon className="bgwhite" icon={faStopCircle} />
+            </FaRoundButton>
           )}
+
+          <BmcWrapper>
+            <a href="https://www.buymeacoffee.com/andrew91" target="_blank" rel="noopener noreferrer">
+              <Bmc height={32} />
+            </a>
+          </BmcWrapper>
         </ContentWrap>
         <Footer>
-          &copy; &nbsp; <b>2021</b>
-          <StyledLink href="http://polyakandras.hu" target="_blank">
-            &nbsp;
-            <b>
-              <u>polyakandras.hu</u>
-            </b>
-          </StyledLink>
+          <FooterContainer>
+            <FooterElement>
+              beéneklős app -&nbsp;
+              <StyledLink href="https://vocalroutine.com" target="_blank">
+                vocalroutine.com
+              </StyledLink>
+            </FooterElement>
+            <FooterElement>
+              webfejlesztés - gitároktatás -&nbsp;
+              <StyledLink href="http://polyakandras.hu" target="_blank">
+                polyakandras.hu
+              </StyledLink>
+            </FooterElement>
+          </FooterContainer>
         </Footer>
       </MainContainer>
     );
@@ -196,6 +223,20 @@ export class Clucker extends Component {
 }
 
 export default Clucker;
+
+const BmcWrapper = styled.div`
+  padding: 10px;
+  margin-top: 50px;
+  text-align: center;
+
+  @media (max-width: 580px) {
+    margin-top: 30px;
+  }
+  @media (max-width: 400px) {
+    margin-top: 16px;
+    margin-bottom: 20px;
+  }
+`;
 
 const MainContainer = styled.div`
   position: relative;
@@ -205,6 +246,9 @@ const MainContainer = styled.div`
     text-align: center;
     color: #333;
     font-family: "Sigmar One", cursive;
+    @media (max-width: 400px) {
+      font-size: 28px;
+    }
   }
 
   h2 {
@@ -212,15 +256,66 @@ const MainContainer = styled.div`
     text-align: center;
     font-weight: 400;
     color: #4d4d4d;
-    font-family: "Indie Flower", cursive;
     font-family: "Kalam", cursive;
-    margin-top: -4px;
+    margin-top: -7px;
+  }
+`;
+
+const RoosterContainer = styled.div`
+  position: relative;
+  height: 200px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+
+  margin: 0 auto;
+
+  @media (max-width: 580px) {
+    height: 150px;
+  }
+
+  .cluck1 {
+    position: absolute;
+    top: 18px;
+    right: 0;
+    font-family: "Kalam", cursive;
+    font-size: 22px;
+    font-weight: 400;
+  }
+  .cluck2 {
+    position: absolute;
+    top: 28px;
+    right: 16px;
+    font-family: "Kalam", cursive;
+    font-size: 22px;
+    font-weight: 400;
+  }
+  .cluck3 {
+    position: absolute;
+    top: 24px;
+    right: 0;
+    font-family: "Kalam", cursive;
+    font-size: 22px;
+    font-weight: 400;
+  }
+  .cluck4 {
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    font-family: "Kalam", cursive;
+    font-size: 22px;
+    font-weight: 400;
   }
 `;
 
 const ContentWrap = styled.div`
   padding-bottom: 2.5rem; /* Footer height */
   padding-top: 30px;
+
+  @media (max-width: 580px) {
+    padding-top: 10px;
+    padding-bottom: 3.8rem; /* Footer height */
+  }
 
   max-width: 90%;
   margin: 0 auto;
@@ -235,20 +330,60 @@ const Footer = styled.footer`
   bottom: 0;
   width: 100%;
   height: 2.5rem;
+  @media (max-width: 580px) {
+    height: 3.8rem;
+  }
   background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-top: 1px solid #dedede;
 
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
+  color: #777;
+`;
+
+const FooterContainer = styled.div`
+  margin: 0 auto;
+  padding-right: 20px;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  width: 100%;
+
+  @media (max-width: 580px) {
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 15px;
+  }
+  @media (max-width: 400px) {
+    font-size: 14px;
+  }
+  @media (max-width: 350px) {
+    font-size: 12px;
+  }
+`;
+
+const FooterElement = styled.span`
+  display: inline-block;
+
+  margin-right: 20px;
+
+  @media (max-width: 580px) {
+    margin: 0;
+    padding: 2px 0;
+  }
+
+  :last-of-type {
+    margin-right: 0;
+  }
 `;
 
 const StyledLink = styled.a`
-  color: #0071bd;
-  text-decoration: none;
+  color: #005288;
+  text-decoration: underline;
+  font-weight: bold;
 `;
 
 const SliderWrapper = styled.div`
@@ -289,35 +424,91 @@ const PrettoSlider = withStyles({
   },
 })(Slider);
 
-const RoundButton = styled.button`
-  height: 70px;
-  width: 70px;
+const FaRoundButton = styled.button`
+  background: #a6c2da;
+  color: #f45d5d;
 
-  padding: 20px;
-  margin: 4px auto;
+  font-size: 50px;
 
-  background-color: #f45d5d;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  text-transform: uppercase;
+  width: 100%;
+  max-width: 600px;
+
+  margin: 32px auto 0;
+
+  @media (max-width: 580px) {
+    font-size: 40px;
+  }
+
+  padding: 5px;
+  padding-right: 0;
 
   border: none;
-  text-decoration: none;
-  border-radius: 50%;
+  border-radius: 16px;
+
+  cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  :hover {
+    background: #0071bc;
+    color: #f73636;
+  }
+
+  .bgwhite {
+    border-radius: 50%;
+    background: white;
+    padding: 2px;
+  }
+
+  .cluckhere {
+    font-family: "Sigmar One", cursive;
+    margin-right: 16px;
+    font-size: 40px;
+    color: #fff;
+
+    @media (max-width: 580px) {
+      font-size: 30px;
+    }
+  }
 `;
 
-const SvgWrapper = styled.div`
-  padding-left: 9px;
-  padding-top: 4px;
-`;
+// const RoundButton = styled.button`
+//   height: 70px;
+//   width: 70px;
+
+//   padding: 20px;
+//   .play {
+//     padding-left: 6px;
+//   }
+//   .stop {
+//     padding-left: 3px;
+//   }
+//   margin: 4px auto;
+
+//   background-color: #f45d5d;
+//   color: white;
+//   font-size: 32px;
+//   font-weight: bold;
+//   text-transform: uppercase;
+
+//   border: none;
+//   text-decoration: none;
+//   border-radius: 50%;
+
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `;
 
 const TempoBpmWrapper = styled.div`
   margin: 22px 0 0 0;
+
+  @media (max-width: 580px) {
+    margin-top: 8px;
+  }
+
   text-align: center;
   color: #333;
   font-family: "Montserrat", sans-serif;
@@ -330,10 +521,13 @@ const TempoBpmWrapper = styled.div`
 
 const BeatsWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 4px;
 
-  margin: 36px auto 12px;
+  margin: 20px auto 12px;
+
+  @media (max-width: 580px) {
+  }
 
   width: 100%;
   max-width: 600px;
