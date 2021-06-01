@@ -450,7 +450,8 @@ const PrettoSlider = withStyles({
 })(Slider);
 
 const FaRoundButton = styled.button`
-  background: #a6c2da;
+  /* background: #a6c2da; */
+  background: #3a90ca;
   color: #f45d5d;
 
   font-size: 50px;
@@ -510,8 +511,8 @@ const Footer = styled.footer`
   background: white;
 
   font-family: "Montserrat", sans-serif;
-  font-weight: 400;
-  color: #777;
+  font-weight: bold;
+  color: #ff3d3d;
 `;
 
 const FooterContainer = styled.div`
