@@ -248,7 +248,7 @@ const BmcWrapper = styled.div`
   }
 
   @media (max-width: 580px) {
-    margin-top: 30px;
+    margin-top: 20px;
   }
   @media (max-width: 400px) {
     margin-top: 16px;
@@ -259,6 +259,7 @@ const BmcWrapper = styled.div`
 const MainContainer = styled.div`
   position: relative;
   min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
 
   h1 {
     text-align: center;
@@ -283,8 +284,10 @@ const ContentWrap = styled.div`
   padding-bottom: 2.5rem; /* Footer height */
   padding-top: 30px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     padding-top: 10px;
+  }
+  @media (max-width: 768px) {
     padding-bottom: 3.8rem; /* Footer height */
   }
 
@@ -306,7 +309,7 @@ const RoosterContainer = styled.div`
   margin: 0 auto;
 
   @media (max-width: 580px) {
-    height: 150px;
+    height: 130px;
   }
 
   .cluck1 {
@@ -352,20 +355,20 @@ const Unmute = styled.div`
   height: 25px;
   opacity: 0;
 
-  ${(props) => (props.started === "started" && 'animation: fadeOut 3s 0.5s both')};
+  ${(props) => (props.started === "started" && 'animation: fadeOut 3.5s 0.4s both')};
 
   @media (max-width: 580px) {
-    height: 20px;
+    height: 16px;
     font-size: 16px;
   }
 
 `;
 
 const TempoBpmWrapper = styled.div`
-  margin: 20px 0 -4px 0;
+  margin: 14px 0 -4px 0;
 
   @media (max-width: 580px) {
-    margin-top: 8px;
+    margin-top: 0px;
   }
 
   text-align: center;
@@ -386,6 +389,7 @@ const BeatsWrapper = styled.div`
   margin: 20px auto 12px;
 
   @media (max-width: 580px) {
+    margin-top: 10px;
   }
 
   width: 100%;

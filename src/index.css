@@ -4,6 +4,11 @@
   padding: 0;
 }
 
+html,
+body {
+  height: 100%
+}
+
 body {
   background: #F3F5FF;
   margin: 0;
@@ -169,13 +174,18 @@ body {
     opacity: 0;
   }
 
-  40% {
+  30% {
+    transform: translateY(0px);
+    opacity: 100;
+  }
+  
+  60% {
     transform: translateY(0px);
     opacity: 100;
   }
 
   100% {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
     opacity: 0;
   }
 }

@@ -21,6 +21,21 @@ function App() {
   };
 
   useEffect(() => {
+    const setDocHeight = () => {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
+    setDocHeight();
+
+    window.addEventListener("orientationchange", () => {
+      setDocHeight();
+    });
+
+    window.addEventListener("resize", () => {
+      setDocHeight();
+    });
+
     WorkerRef.current = new WebWorker(worker);
     WorkerRef.current.postMessage({ interval: LOOKAHEAD });
 
