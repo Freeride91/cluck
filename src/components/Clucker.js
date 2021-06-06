@@ -202,22 +202,23 @@ export class Clucker extends Component {
           )}
 
           <BmcWrapper>
+            <div className="laugh">If you laughed, </div>
+
             <a href="https://www.buymeacoffee.com/andrew91" target="_blank" rel="noopener noreferrer">
-              <Bmc height={32} />
+              <Bmc height={30} className="mr-4 ml-4" />
             </a>
-            🐔
           </BmcWrapper>
         </ContentWrap>
         <Footer>
           <FooterContainer>
             <FooterElement>
-              vocal warmup app -&nbsp;
+              my vocal warmup app -&nbsp;
               <StyledLink href="https://vocalroutine.com" target="_blank">
                 vocalroutine.com
               </StyledLink>
             </FooterElement>
             <FooterElement>
-              webfejlesztés / gitároktatás -&nbsp;
+              web development & about -&nbsp;
               <StyledLink href="http://polyakandras.hu" target="_blank">
                 polyakandras.hu
               </StyledLink>
@@ -236,15 +237,31 @@ const BmcWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  font-size: 30px;
+  .laugh {
+    font-weight: 300;
+    color: #4d4d4d;
+    font-family: "Kalam", cursive;
+    font-family: "Montserrat", sans-serif;
+    font-size: 17px;
+    margin-top: 4px;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: 1px solid #efd956; */
+    border-radius: 8px;
+    padding: 5px 8px;
+    margin-left: 8px;
+  }
 
   padding: 0;
-  margin-top: 30px;
+  margin: 30px auto 0;
   text-align: center;
 
   a {
     text-decoration: none;
-    padding: 0 8px;
   }
 
   @media (max-width: 580px) {
@@ -355,13 +372,12 @@ const Unmute = styled.div`
   height: 25px;
   opacity: 0;
 
-  ${(props) => (props.started === "started" && 'animation: fadeOut 3.5s 0.4s both')};
+  ${(props) => props.started === "started" && "animation: fadeOut 4s 0.4s both"};
 
   @media (max-width: 580px) {
     height: 16px;
     font-size: 16px;
   }
-
 `;
 
 const TempoBpmWrapper = styled.div`
